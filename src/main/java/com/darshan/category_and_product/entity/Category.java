@@ -1,7 +1,10 @@
 package com.darshan.category_and_product.entity;
 
+import com.darshan.admin_module.entity.SubCategory;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "categories")
@@ -11,6 +14,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Category {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,4 +23,7 @@ public class Category {
     private String name;
 
     private String description;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SubCategory> subCategories;
 }

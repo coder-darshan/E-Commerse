@@ -3,11 +3,12 @@ package com.darshan.category_and_product.repository;
 
 import com.darshan.category_and_product.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
 
     List<Product> findByNameContainingIgnoreCase(String name);
 
@@ -15,4 +16,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT p FROM Product p WHERE p.price BETWEEN :min AND :max")
     List<Product> findByPriceRange(Double min, Double max);
+
+    List<Product> findBySubCategoryId(Long subCategoryId);
 }

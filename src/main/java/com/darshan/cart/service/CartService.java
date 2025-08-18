@@ -8,27 +8,21 @@ import com.darshan.cart.repository.CartItemRepository;
 import com.darshan.cart.repository.CartRepository;
 import com.darshan.category_and_product.entity.Product;
 import com.darshan.category_and_product.repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
-
-
 @Service
+@RequiredArgsConstructor
 public class CartService {
+
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
-    public CartService(CartRepository cartRepository, CartItemRepository cartItemRepository,
-                       ProductRepository productRepository, UserRepository userRepository) {
-        this.cartRepository = cartRepository;
-        this.cartItemRepository = cartItemRepository;
-        this.productRepository = productRepository;
-        this.userRepository = userRepository;
-    }
 
     @Transactional
     public Cart addToCart(Long userId, Long productId, int quantity) {
@@ -39,18 +33,7 @@ public class CartService {
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
         Cart cart = cartRepository.findByUser(user)
-                .orElseGet(() -> {
-                    Cart newCart = new Cart();
-                    newCart.setUser(user);
-                    return cartRepository.save(newCart);
-                });
-
-        // Ensure items list is initialized
-        if (cart.getItems() == null) {
-            cart.setItems(new ArrayList<>());
-        }
-
-
+                .orElseGet(() -> cartRepository.save(Cart.builder().user(user).items(new ArrayList<>()).build()));
 
         // Check if product already exists in cart
         Optional<CartItem> existingItem = cart.getItems().stream()
@@ -58,20 +41,18 @@ public class CartService {
                 .findFirst();
 
         if (existingItem.isPresent()) {
-            // Increase quantity
             existingItem.get().setQuantity(existingItem.get().getQuantity() + quantity);
         } else {
-            // Add new item
-            CartItem cartItem = new CartItem();
-            cartItem.setCart(cart);
-            cartItem.setProduct(product);
-            cartItem.setQuantity(quantity);
+            CartItem cartItem = CartItem.builder()
+                    .cart(cart)
+                    .product(product)
+                    .quantity(quantity)
+                    .build();
             cart.getItems().add(cartItem);
         }
 
         return cartRepository.save(cart);
     }
-
 
     public Cart viewCart(Long userId) {
         User user = userRepository.findById(userId)
@@ -104,4 +85,12 @@ public class CartService {
         return cartRepository.findById(cartId)
                 .orElseThrow(() -> new RuntimeException("Cart not found with id: " + cartId));
     }
+
+    @Transactional
+    public void clearCart(Long userId) {
+        Cart cart = viewCart(userId);
+        cart.getItems().clear();
+        cartRepository.save(cart);
+    }
+
 }

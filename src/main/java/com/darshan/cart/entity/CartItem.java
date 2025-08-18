@@ -12,9 +12,12 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class CartItem {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private Integer quantity;
 
     @ManyToOne
     @JoinColumn(name = "cart_id")
@@ -23,6 +26,4 @@ public class CartItem {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
-
-    private Integer quantity;
 }
