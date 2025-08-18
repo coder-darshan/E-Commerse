@@ -53,7 +53,14 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/register", "/auth/login").permitAll() // allow these endpoints
+                        .requestMatchers(
+                                "/auth/register",
+                                "/auth/login",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll() // allow Swagger docs and UI
+                        .requestMatchers("/api/products/**").permitAll() // allow product endpoints (if you want public access)
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler))
@@ -63,4 +70,5 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 }
