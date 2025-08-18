@@ -1,6 +1,5 @@
 package com.darshan.reporting.service;
 
-
 import com.darshan.order_management.repository.OrderItemRepository;
 import com.darshan.reporting.entity.DailySalesReport;
 import com.darshan.reporting.entity.TopSellingProduct;
@@ -17,6 +16,8 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -25,21 +26,25 @@ public class ReportingService {
 
     private final OrderItemRepository orderItemRepository;
 
-    // Get daily sales between dates
+    // ✅ Get daily sales between dates (convert LocalDate → LocalDateTime)
     public List<DailySalesReport> getDailySales(LocalDate start, LocalDate end) {
-        return orderItemRepository.getDailySales(start, end);
+        LocalDateTime startDateTime = start.atStartOfDay();
+        LocalDateTime endDateTime = end.atTime(LocalTime.MAX);
+        return orderItemRepository.getDailySales(startDateTime, endDateTime);
     }
 
-    // Get top-selling products
+    // ✅ Get top-selling products
     public List<TopSellingProduct> getTopSellingProducts() {
         return orderItemRepository.getTopSellingProducts();
     }
-    // Export daily sales report to Excel
+
+    // ✅ Export daily sales report to Excel
     public ByteArrayInputStream exportDailySalesToExcel(LocalDate start, LocalDate end) throws Exception {
         List<DailySalesReport> reports = getDailySales(start, end);
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet("Daily Sales");
 
+            // Header row
             Row header = sheet.createRow(0);
             header.createCell(0).setCellValue("Date");
             header.createCell(1).setCellValue("Total Sales");
@@ -48,7 +53,7 @@ public class ReportingService {
             int rowIdx = 1;
             for (DailySalesReport r : reports) {
                 Row row = sheet.createRow(rowIdx++);
-                row.createCell(0).setCellValue(r.getDate());
+                row.createCell(0).setCellValue(r.getDate().toString());
                 row.createCell(1).setCellValue(r.getTotalSales());
                 row.createCell(2).setCellValue(r.getTotalOrders());
             }
@@ -58,7 +63,7 @@ public class ReportingService {
         }
     }
 
-    // Export daily sales report to PDF
+    // ✅ Export daily sales report to PDF
     public ByteArrayInputStream exportDailySalesToPDF(LocalDate start, LocalDate end) throws Exception {
         List<DailySalesReport> reports = getDailySales(start, end);
         Document document = new Document(PageSize.A4);
@@ -80,7 +85,7 @@ public class ReportingService {
         table.addCell("Total Orders");
 
         for (DailySalesReport r : reports) {
-            table.addCell(r.getDate());
+            table.addCell(r.getDate().toString());
             table.addCell(String.valueOf(r.getTotalSales()));
             table.addCell(String.valueOf(r.getTotalOrders()));
         }
@@ -91,12 +96,13 @@ public class ReportingService {
         return new ByteArrayInputStream(out.toByteArray());
     }
 
-    // Export Top-Selling Products to Excel
+    // ✅ Export Top-Selling Products to Excel
     public ByteArrayInputStream exportTopSellingProductsToExcel() throws Exception {
         List<TopSellingProduct> products = getTopSellingProducts();
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet("Top Selling Products");
 
+            // Header row
             Row header = sheet.createRow(0);
             header.createCell(0).setCellValue("Product ID");
             header.createCell(1).setCellValue("Product Name");
@@ -115,7 +121,7 @@ public class ReportingService {
         }
     }
 
-    // Export Top-Selling Products to PDF
+    // ✅ Export Top-Selling Products to PDF
     public ByteArrayInputStream exportTopSellingProductsToPDF() throws Exception {
         List<TopSellingProduct> products = getTopSellingProducts();
         Document document = new Document(PageSize.A4);
@@ -148,4 +154,3 @@ public class ReportingService {
         return new ByteArrayInputStream(out.toByteArray());
     }
 }
-

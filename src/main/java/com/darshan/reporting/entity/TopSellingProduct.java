@@ -8,5 +8,5 @@ import lombok.Data;
 public class TopSellingProduct {
     private Long productId;
     private String productName;
-    private Integer totalQuantitySold;
+    private Long totalQuantitySold;
 }

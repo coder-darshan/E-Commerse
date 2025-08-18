@@ -7,6 +7,13 @@ import lombok.Data;
 @AllArgsConstructor
 public class SalesReportDTO {
     private String productName;
-    private int quantitySold;
+    private Long quantitySold;
     private double totalRevenue;
+
+    // Constructor required by JPQL
+    public SalesReportDTO(String productName, Long quantitySold, Double totalRevenue) {
+        this.productName = productName;
+        this.quantitySold = quantitySold;
+        this.totalRevenue = totalRevenue;
+    }
 }

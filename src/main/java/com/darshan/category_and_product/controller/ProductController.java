@@ -32,7 +32,7 @@ public class ProductController {
         return productService.getProductById(id);
     }
 
-    @GetMapping("/search")
+    @GetMapping("/searchByName")
     public List<Product> searchProducts(@RequestParam String name) {
         return productService.searchByName(name);
     }
