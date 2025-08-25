@@ -1,10 +1,9 @@
 package com.darshan.admin_module.controller;
 
 import com.darshan.admin_panel.service.UserService;
-import com.darshan.admin_module.entity.SubCategory;
+import com.darshan.category_and_product.entity.SubCategory;
 import com.darshan.admin_module.service.AdminService;
 import com.darshan.auth.entity.User;
-import com.darshan.cart.entity.Cart;
 import com.darshan.category_and_product.entity.Category;
 import com.darshan.category_and_product.entity.Product;
 import com.darshan.category_and_product.services.ProductService;

@@ -1,6 +1,5 @@
 package com.darshan.category_and_product.entity;
 
-import com.darshan.admin_module.entity.SubCategory;
 import jakarta.persistence.*;
 import lombok.*;
 

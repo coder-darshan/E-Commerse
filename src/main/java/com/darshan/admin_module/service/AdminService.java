@@ -1,11 +1,11 @@
 package com.darshan.admin_module.service;
 
-import com.darshan.admin_module.entity.SubCategory;
-import com.darshan.admin_module.repository.SubCategoryRepository;
+import com.darshan.category_and_product.entity.SubCategory;
 import com.darshan.category_and_product.entity.Category;
 import com.darshan.category_and_product.entity.Product;
 import com.darshan.category_and_product.repository.CategoryRepository;
 import com.darshan.category_and_product.repository.ProductRepository;
+import com.darshan.category_and_product.repository.SubCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

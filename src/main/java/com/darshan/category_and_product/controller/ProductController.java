@@ -32,6 +32,7 @@ public class ProductController {
         return productService.getProductById(id);
     }
 
+//    http://localhost:8080/api/products/searchByName?name=Oppo
     @GetMapping("/searchByName")
     public List<Product> searchProducts(@RequestParam String name) {
         return productService.searchByName(name);
@@ -42,6 +43,7 @@ public class ProductController {
         return productService.filterByCategory(categoryId);
     }
 
+//    http://localhost:8080/api/products/filter/price?min=2000&max=10000
     @GetMapping("/filter/price")
     public List<Product> filterByPriceRange(@RequestParam Double min,
                                             @RequestParam Double max) {
@@ -70,4 +72,10 @@ public class ProductController {
                 minPrice, maxPrice, page, size, sortBy, sortDir);
         return ResponseEntity.ok(products);
     }
+    @PostMapping("/subcategory/{subCategoryId}")
+    public Product createProduct(@PathVariable Long subCategoryId,
+                                 @RequestBody Product product) {
+        return productService.createProduct(subCategoryId, product);
+    }
+
 }

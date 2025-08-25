@@ -1,9 +1,12 @@
 package com.darshan.category_and_product.services;
 
 import com.darshan.category_and_product.entity.Product;
+import com.darshan.category_and_product.entity.SubCategory;
 import com.darshan.category_and_product.repository.ProductRepository;
+import com.darshan.category_and_product.repository.SubCategoryRepository;
 import com.darshan.search_filter.entity.ProductSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -17,6 +20,9 @@ import java.util.Optional;
 public class ProductService {
 
     private final ProductRepository productRepository;
+
+    @Autowired
+    private SubCategoryRepository subCategoryRepo;
 
     // ------------------ Create / Update ------------------
     public Product saveProduct(Product product) {
@@ -75,4 +81,12 @@ public class ProductService {
                 pageRequest
         );
     }
+    public Product createProduct(Long subCategoryId, Product product) {
+        SubCategory subCategory = subCategoryRepo.findById(subCategoryId.intValue())
+                .orElseThrow(() -> new RuntimeException("SubCategory not found"));
+        product.setSubCategory(subCategory);
+        product.setCategory(subCategory.getCategory()); // link to parent category too
+        return productRepository.save(product);
+    }
+
 }

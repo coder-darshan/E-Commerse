@@ -1,7 +1,5 @@
-package com.darshan.admin_module.entity;
+package com.darshan.category_and_product.entity;
 
-import com.darshan.category_and_product.entity.Category;
-import com.darshan.category_and_product.entity.Product;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
