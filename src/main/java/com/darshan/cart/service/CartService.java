@@ -2,8 +2,10 @@ package com.darshan.cart.service;
 
 import com.darshan.auth.entity.User;
 import com.darshan.auth.repository.UserRepository;
+import com.darshan.cart.DTO.CartDTO;
 import com.darshan.cart.entity.Cart;
 import com.darshan.cart.entity.CartItem;
+import com.darshan.cart.mapper.CartMapper;
 import com.darshan.cart.repository.CartItemRepository;
 import com.darshan.cart.repository.CartRepository;
 import com.darshan.category_and_product.entity.Product;
@@ -24,6 +26,7 @@ public class CartService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
 
+    //    Finds the user and product, checks if the cart exists. If not, creates it. Adds or updates quantity for a product.
     @Transactional
     public Cart addToCart(Long userId, Long productId, int quantity) {
         User user = userRepository.findById(userId)
@@ -54,6 +57,7 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
+    //Returns all items in a user’s cart.
     public Cart viewCart(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -62,6 +66,7 @@ public class CartService {
                 .orElseThrow(() -> new RuntimeException("Cart is empty"));
     }
 
+    //    Removes one item from cart by ID.
     @Transactional
     public Cart removeItem(Long userId, Long itemId) {
         Cart cart = viewCart(userId);
@@ -70,6 +75,7 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
+    //Updates quantity of a specific item.
     @Transactional
     public Cart updateQuantity(Long userId, Long itemId, int quantity) {
         Cart cart = viewCart(userId);
@@ -86,11 +92,14 @@ public class CartService {
                 .orElseThrow(() -> new RuntimeException("Cart not found with id: " + cartId));
     }
 
+    //Empties the cart.
+//Empties the cart.
     @Transactional
-    public void clearCart(Long userId) {
+    public CartDTO clearCart(Long userId) {
         Cart cart = viewCart(userId);
         cart.getItems().clear();
         cartRepository.save(cart);
-    }
+        return CartMapper.toDTO(cart);
 
+    }
 }
