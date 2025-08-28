@@ -17,6 +17,7 @@ public class CartController {
     }
 
     // Get cart by customer/user ID
+//    http://localhost:8080/api/cart/1
     @GetMapping("/{userId}")
     public CartDTO getCart(@PathVariable Long userId) {
         Cart cart = cartService.viewCart(userId);
@@ -24,6 +25,8 @@ public class CartController {
     }
 
     // Add product to cart (using user/customer ID)
+    //we aare using requestParam thats why we need to provide like below url
+//    http://localhost:8080/api/cart/add?userId=1&productId=1&quantity=2
     @PostMapping("/add")
     public CartDTO  addToCart(@RequestParam Long userId,
                           @RequestParam Long productId,
@@ -34,6 +37,7 @@ public class CartController {
     }
 
     // Remove cart item by item ID and user/customer ID
+//    http://localhost:8080/api/cart/remove?userId=1&itemId=2
     @DeleteMapping("/remove")
     public CartDTO removeItem(@RequestParam Long userId,
                               @RequestParam Long itemId) {
@@ -42,6 +46,7 @@ public class CartController {
     }
 
     // Update quantity of a cart item
+//    http://localhost:8080/api/cart/update?userId=1&itemId=1&quantity=5
     @PutMapping("/update")
     public CartDTO  updateQuantity(@RequestParam Long userId,
                                @RequestParam Long itemId,
@@ -52,6 +57,7 @@ public class CartController {
     }
 
     // Clear cart by user/customer ID
+//    http://localhost:8080/api/cart/1/clear
     @DeleteMapping("/{userId}/clear")
     public CartDTO clearCart(@PathVariable Long userId) {
         return cartService.clearCart(userId);
